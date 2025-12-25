@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const celebrateBtn = document.getElementById('celebrateBtn');
     const finalMessage = document.getElementById('finalMessage');
     const snowContainer = document.getElementById('snowContainer');
+    const shareBtn = document.getElementById('shareBtn');
 
     // --- Logic ---
 
@@ -74,6 +75,10 @@ document.addEventListener('DOMContentLoaded', () => {
             // Small timeout to allow display:block to apply before opacity transition
             setTimeout(() => {
                 resultScreen.classList.add('active');
+
+                // Show share button only if sharing is supported or as a fallback
+                // We'll show it always for now, logic inside handles the action
+                shareBtn.style.display = 'inline-flex';
             }, 50);
 
         }, LOADING_DELAY_MS);
@@ -90,6 +95,58 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 50);
         }, 1000); // Wait for fade out
     }
+
+    // --- Sharing Logic ---
+    shareBtn.addEventListener('click', async () => {
+        try {
+            // Feedback to user
+            const originalText = shareBtn.innerHTML;
+            shareBtn.innerHTML = '<span class="spinner" style="font-size: 1rem;">⌛</span> Gerando...';
+
+            // Capture the specific card or the whole screen
+            // We'll capture the app-container content
+            const elementToCapture = document.querySelector('.app-container');
+
+            const canvas = await html2canvas(elementToCapture, {
+                backgroundColor: null, // Keep transparency if possible, or use the bg
+                scale: 2, // Higher resolution
+                useCORS: true // For images if we had any external ones, though we removed gifs
+            });
+
+            // Convert to blob
+            canvas.toBlob(async (blob) => {
+                const file = new File([blob], "mensagem_natal.png", { type: "image/png" });
+
+                // Check for native share support
+                if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+                    try {
+                        await navigator.share({
+                            files: [file],
+                            title: 'Mensagem de Natal',
+                            text: 'Olha minha mensagem de Natal! 🎄✨'
+                        });
+                        shareBtn.innerHTML = originalText;
+                    } catch (err) {
+                        console.log('Share failed or cancelled', err);
+                        shareBtn.innerHTML = originalText;
+                    }
+                } else {
+                    // Fallback: Download the image
+                    const link = document.createElement('a');
+                    link.download = 'mensagem_natal.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+                    alert("Imagem salva! Agora você pode postar no seu Story. 📸");
+                    shareBtn.innerHTML = originalText;
+                }
+            }, 'image/png');
+
+        } catch (error) {
+            console.error('Error generating image:', error);
+            alert('Não foi possível gerar a imagem. Tente tirar um print manual!');
+            shareBtn.innerHTML = '<span class="icon">📸</span> Compartilhar no Story';
+        }
+    });
 
     // --- Background Animation (Snowflakes) ---
     function createSnowflake() {

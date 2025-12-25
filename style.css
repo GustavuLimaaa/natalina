@@ -172,12 +172,41 @@ input:focus {
 }
 
 .refresh-hint {
-    margin-top: 30px;
+    margin-top: 20px;
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.6);
     font-family: 'Quicksand', sans-serif;
     letter-spacing: 1px;
     animation: fadeIn 2s ease;
+}
+
+/* Instagram Share Button */
+.insta-btn {
+    margin-top: 15px;
+    padding: 12px 30px;
+    font-family: 'Quicksand', sans-serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: white;
+    background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 5px 15px rgba(220, 39, 67, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: fadeIn 1s ease;
+}
+
+.insta-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(220, 39, 67, 0.6);
+}
+
+.insta-btn .icon {
+    font-size: 1.2rem;
 }
 
 /* Loading */
