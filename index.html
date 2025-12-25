@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feliz Natal - Uma Surpresa para Você</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Quicksand:wght@400;600&family=Dancing+Script:wght@500;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Background Elements -->
+    <div class="snow-container" id="snowContainer"></div>
+    <div class="lights-overlay"></div>
+
+    <!-- Decorative GIFs Removed -->
+
+    <main class="app-container">
+
+        <!-- Screen 1: Input -->
+        <section id="inputScreen" class="screen active">
+            <div class="glass-card">
+                <h1 class="christmas-title">Magia do Natal</h1>
+                <p class="subtitle">Antes de começar, quem é você?</p>
+
+                <div class="input-group">
+                    <input type="text" id="nameInput" placeholder="Seu nome aqui..." autocomplete="off">
+                </div>
+
+                <button id="celebrateBtn" class="glow-on-hover">
+                    Comemorar Natal
+                </button>
+            </div>
+        </section>
+
+        <!-- Loading / Transition Overlay -->
+        <div id="loadingOverlay" class="loading-overlay hidden">
+            <div class="spinner">🎄</div>
+            <p>Gerando espírito natalino...</p>
+        </div>
+
+        <!-- Screen 2: Celebration -->
+        <section id="resultScreen" class="screen hidden">
+
+            <div class="tree-container">
+                <!-- CSS 3D Tree -->
+                <div class="christmas-tree">
+                    <div class="tree-star">⭐</div>
+                    <div class="tree-layer layer-top"></div>
+                    <div class="tree-layer layer-middle"></div>
+                    <div class="tree-layer layer-bottom"></div>
+                    <div class="trunk"></div>
+                    <div class="shadow"></div>
+                </div>
+            </div>
+
+            <div class="message-card">
+                <h2 id="finalMessage" class="animated-text"></h2>
+                <p class="refresh-hint">Para ver outro nome, atualize a página ↻</p>
+            </div>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
