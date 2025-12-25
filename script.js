@@ -106,11 +106,12 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide UI elements we don't want in the print
             shareBtn.style.display = 'none';
             document.querySelector('.refresh-hint').style.display = 'none';
-            // Ensure background is visible (sometimes html2canvas needs explicit size/bg)
+            // Add print-mode class to flatten the tree
+            document.body.classList.add('print-mode');
 
             // Capture the entire body to get the background gradient
             const canvas = await html2canvas(document.body, {
-                backgroundColor: null, // Uses the body's background
+                backgroundColor: '#1a2e1a', // Force the dark green background color (fallback if gradient fails)
                 scale: 2, // High resolution
                 useCORS: true,
                 ignoreElements: (element) => {
@@ -125,9 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 height: document.body.scrollHeight
             });
 
-            // Restore UI elements
+            // Restore UI elements and remove print-mode
             shareBtn.style.display = 'inline-flex';
             document.querySelector('.refresh-hint').style.display = 'block';
+            document.body.classList.remove('print-mode');
             shareBtn.innerHTML = originalBtnContent;
 
             // Convert to blob

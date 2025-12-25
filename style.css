@@ -375,6 +375,25 @@ input:focus {
     }
 }
 
+/* Print Mode (Flatten 3D for html2canvas) */
+body.print-mode .christmas-tree {
+    animation: none !important;
+    transform: rotateY(0deg) !important;
+    transform-style: flat !important;
+}
+
+body.print-mode .tree-layer {
+    box-shadow: none !important;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
+    /* Simpler shadow */
+}
+
+body.print-mode .snoopy-gif,
+body.print-mode .corner-deco {
+    display: none !important;
+    /* Optional: hide gifs if they cause issues, but keeping them for now is fine if they work */
+}
+
 /* --- Mobile Responsiveness --- */
 @media (max-width: 600px) {
     .christmas-title {
