@@ -375,23 +375,42 @@ input:focus {
     }
 }
 
-/* Print Mode (Flatten 3D for html2canvas) */
-body.print-mode .christmas-tree {
-    animation: none !important;
-    transform: rotateY(0deg) !important;
-    transform-style: flat !important;
+/* Print Mode (Simplified for Screenshot) */
+body.print-mode {
+    background: #1a2e1a !important;
+    /* Force solid background */
 }
 
-body.print-mode .tree-layer {
-    box-shadow: none !important;
-    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.5));
-    /* Simpler shadow */
-}
-
-body.print-mode .snoopy-gif,
-body.print-mode .corner-deco {
+body.print-mode .christmas-tree,
+body.print-mode .snow-container,
+body.print-mode .lights-overlay {
     display: none !important;
-    /* Optional: hide gifs if they cause issues, but keeping them for now is fine if they work */
+    /* Hide complex 3D/animated elements */
+}
+
+body.print-mode .message-card {
+    margin-top: 20px;
+}
+
+body.print-mode .print-icon {
+    display: block !important;
+    font-size: 80px;
+    margin-bottom: 20px;
+    text-shadow: 0 0 20px var(--gold);
+    animation: none !important;
+}
+
+body.print-mode .animated-text {
+    color: #ffffff !important;
+    text-shadow: 0 2px 4px #000000 !important;
+    opacity: 1 !important;
+    font-size: 2rem !important;
+    /* Readable size */
+}
+
+body.print-mode .name-highlight {
+    color: var(--gold) !important;
+    text-shadow: none !important;
 }
 
 /* --- Mobile Responsiveness --- */
