@@ -106,30 +106,71 @@ document.addEventListener('DOMContentLoaded', () => {
             // Hide UI elements we don't want in the print
             shareBtn.style.display = 'none';
             document.querySelector('.refresh-hint').style.display = 'none';
-            // Add print-mode class to flatten the tree
-            document.body.classList.add('print-mode');
 
-            // Capture the entire body to get the background gradient
+            // Capture the entire body with specific clone edits
             const canvas = await html2canvas(document.body, {
-                backgroundColor: '#1a2e1a', // Force the dark green background color (fallback if gradient fails)
+                backgroundColor: '#1a2e1a', // Force the dark green background
                 scale: 2, // High resolution
                 useCORS: true,
-                ignoreElements: (element) => {
-                    // Double safety to ignore specific IDs if needed
-                    return element.id === 'shareBtn';
-                },
                 windowWidth: document.body.scrollWidth,
                 windowHeight: document.body.scrollHeight,
                 x: 0,
                 y: 0,
                 width: document.body.scrollWidth,
-                height: document.body.scrollHeight
+                height: document.body.scrollHeight,
+                onclone: (clonedDoc) => {
+                    const body = clonedDoc.body;
+
+                    // 1. Force Background (Double check)
+                    body.style.background = '#1a2e1a';
+
+                    // 2. Hide 3D Tree & Environment to clear the view
+                    const tree = body.querySelector('.christmas-tree');
+                    if (tree) tree.style.display = 'none';
+                    const snow = body.querySelector('.snow-container');
+                    if (snow) snow.style.display = 'none';
+                    const lights = body.querySelector('.lights-overlay');
+                    if (lights) lights.style.display = 'none';
+
+                    // 3. Show & Style Icon
+                    // We'll insert a high-contrast icon directly or show the existing one
+                    const icon = body.querySelector('.print-icon');
+                    if (icon) {
+                        icon.style.display = 'block';
+                        icon.style.color = '#ffffff'; // White icon
+                        icon.style.fontSize = '80px';
+                        icon.style.marginBottom = '20px';
+                        icon.innerHTML = '⭐'; // Use a Star for high contrast against green
+                    }
+
+                    // 4. Force Text Colors to White
+                    const texts = body.querySelectorAll('.animated-text');
+                    texts.forEach(t => {
+                        t.style.color = '#ffffff';
+                        t.style.textShadow = '0 2px 5px #000000';
+                        t.style.fontFamily = 'Quicksand, sans-serif';
+                        t.style.opacity = '1';
+                    });
+
+                    // 5. Force Name Highlight to Gold
+                    const highlights = body.querySelectorAll('.name-highlight');
+                    highlights.forEach(h => {
+                        h.style.color = '#fcc201';
+                        h.style.textShadow = '0 0 15px rgba(252, 194, 1, 0.8)';
+                        h.style.fontWeight = 'bold';
+                    });
+
+                    // 6. Ensure buttons are hidden in clone (redundant but safe)
+                    const btn = body.querySelector('#shareBtn');
+                    if (btn) btn.style.display = 'none';
+                    const hint = body.querySelector('.refresh-hint');
+                    if (hint) hint.style.display = 'none';
+                }
             });
 
-            // Restore UI elements and remove print-mode
+            // Restore UI elements (on the real document)
             shareBtn.style.display = 'inline-flex';
             document.querySelector('.refresh-hint').style.display = 'block';
-            document.body.classList.remove('print-mode');
             shareBtn.innerHTML = originalBtnContent;
 
             // Convert to blob
