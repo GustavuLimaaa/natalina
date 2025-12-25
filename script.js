@@ -100,18 +100,35 @@ document.addEventListener('DOMContentLoaded', () => {
     shareBtn.addEventListener('click', async () => {
         try {
             // Feedback to user
-            const originalText = shareBtn.innerHTML;
-            shareBtn.innerHTML = '<span class="spinner" style="font-size: 1rem;">⌛</span> Gerando...';
+            const originalBtnContent = shareBtn.innerHTML;
+            shareBtn.innerHTML = '<span class="spinner" style="font-size: 1rem;">⌛</span>';
 
-            // Capture the specific card or the whole screen
-            // We'll capture the app-container content
-            const elementToCapture = document.querySelector('.app-container');
+            // Hide UI elements we don't want in the print
+            shareBtn.style.display = 'none';
+            document.querySelector('.refresh-hint').style.display = 'none';
+            // Ensure background is visible (sometimes html2canvas needs explicit size/bg)
 
-            const canvas = await html2canvas(elementToCapture, {
-                backgroundColor: null, // Keep transparency if possible, or use the bg
-                scale: 2, // Higher resolution
-                useCORS: true // For images if we had any external ones, though we removed gifs
+            // Capture the entire body to get the background gradient
+            const canvas = await html2canvas(document.body, {
+                backgroundColor: null, // Uses the body's background
+                scale: 2, // High resolution
+                useCORS: true,
+                ignoreElements: (element) => {
+                    // Double safety to ignore specific IDs if needed
+                    return element.id === 'shareBtn';
+                },
+                windowWidth: document.body.scrollWidth,
+                windowHeight: document.body.scrollHeight,
+                x: 0,
+                y: 0,
+                width: document.body.scrollWidth,
+                height: document.body.scrollHeight
             });
+
+            // Restore UI elements
+            shareBtn.style.display = 'inline-flex';
+            document.querySelector('.refresh-hint').style.display = 'block';
+            shareBtn.innerHTML = originalBtnContent;
 
             // Convert to blob
             canvas.toBlob(async (blob) => {
@@ -125,26 +142,26 @@ document.addEventListener('DOMContentLoaded', () => {
                             title: 'Mensagem de Natal',
                             text: 'Olha minha mensagem de Natal! 🎄✨'
                         });
-                        shareBtn.innerHTML = originalText;
                     } catch (err) {
-                        console.log('Share failed or cancelled', err);
-                        shareBtn.innerHTML = originalText;
+                        console.log('Share cancelled', err);
                     }
                 } else {
-                    // Fallback: Download the image
+                    // Fallback: Download
                     const link = document.createElement('a');
                     link.download = 'mensagem_natal.png';
                     link.href = canvas.toDataURL();
                     link.click();
-                    alert("Imagem salva! Agora você pode postar no seu Story. 📸");
-                    shareBtn.innerHTML = originalText;
+                    alert("Imagem salva! Verifique seus downloads. 📸");
                 }
             }, 'image/png');
 
         } catch (error) {
-            console.error('Error generating image:', error);
-            alert('Não foi possível gerar a imagem. Tente tirar um print manual!');
+            console.error('Error:', error);
+            // Restore UI in case of error
+            shareBtn.style.display = 'inline-flex';
+            document.querySelector('.refresh-hint').style.display = 'block';
             shareBtn.innerHTML = '<span class="icon">📸</span> Compartilhar no Story';
+            alert('Erro ao gerar imagem. Tente tirar print manual.');
         }
     });
 
